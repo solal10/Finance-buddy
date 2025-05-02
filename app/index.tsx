@@ -1,61 +1,98 @@
-import { Redirect } from 'expo-router';
-import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { Link } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from '@/constants/colors';
-import { useEffect, useState } from 'react';
 
-export default function Index() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export default function LandingPage() {
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.content}>
+        <View style={styles.header}>
+          <Text style={styles.title}>FinTrack</Text>
+          <Text style={styles.subtitle}>Your personal finance companion</Text>
+          <Text style={styles.description}>
+            Track expenses, manage budgets, and achieve your financial goals with ease
+          </Text>
+        </View>
 
-  useEffect(() => {
-    // Simulate checking if the app is ready
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
+        <View style={styles.actions}>
+          <Link href="/register" asChild>
+            <Pressable style={styles.registerButton}>
+              <Text style={styles.registerButtonText}>Get Started</Text>
+            </Pressable>
+          </Link>
 
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (error) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>Error: {error}</Text>
-        <Text style={styles.errorSubtext}>Please restart the app</Text>
+          <Link href="/login" asChild>
+            <Pressable style={styles.loginButton}>
+              <Text style={styles.loginButtonText}>Login</Text>
+            </Pressable>
+          </Link>
+        </View>
       </View>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color={colors.primary} />
-        <Text style={styles.loadingText}>Loading...</Text>
-      </View>
-    );
-  }
-
-  return <Redirect href="/(tabs)" />;
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: colors.background,
   },
-  loadingText: {
-    marginTop: 16,
-    fontSize: 16,
+  content: {
+    flex: 1,
+    padding: 24,
+    justifyContent: 'space-between',
+  },
+  header: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 40,
+    fontWeight: 'bold',
+    color: colors.primary,
+    marginBottom: 16,
+  },
+  subtitle: {
+    fontSize: 24,
+    fontWeight: '600',
     color: colors.text,
+    marginBottom: 12,
+    textAlign: 'center',
   },
-  errorText: {
-    fontSize: 18,
-    color: colors.danger,
-    marginBottom: 8,
-  },
-  errorSubtext: {
-    fontSize: 14,
+  description: {
+    fontSize: 16,
     color: colors.textLight,
+    textAlign: 'center',
+    maxWidth: '80%',
+  },
+  actions: {
+    gap: 12,
+  },
+  registerButton: {
+    backgroundColor: colors.primary,
+    borderRadius: 12,
+    paddingVertical: 16,
+    alignItems: 'center',
+  },
+  registerButtonText: {
+    color: colors.white,
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  loginButton: {
+    backgroundColor: colors.background,
+    borderRadius: 12,
+    paddingVertical: 16,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  loginButtonText: {
+    color: colors.text,
+    fontSize: 18,
+    fontWeight: '600',
   },
 });

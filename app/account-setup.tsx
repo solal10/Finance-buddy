@@ -57,7 +57,7 @@ import {
 import { useTranslation } from '@/utils/i18n';
 import { languageNames, Language } from '@/translations';
 import { HouseholdMember, PaymentMethod, BankAccount, InsuranceType } from '@/types/finance';
-import { styles } from '@/app/styles/account-setup-styles';
+import { styles } from './styles/account-setup-styles';
 import { Picker } from '@react-native-picker/picker';
 
 const { height, width } = Dimensions.get('window');
@@ -384,30 +384,53 @@ interface AdditionalExpense {
 
 export default function AccountSetupScreen() {
   const router = useRouter();
-  const { t, language, setLanguage, isRTL } = useTranslation();
+  const { t, isRTL } = useTranslation();
+  const [currentStep, setCurrentStep] = useState(0);
+  const totalSteps = 5;
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  // Personal Info
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [country, setCountry] = useState('');
+  const [currency, setCurrency] = useState('');
+  const [selectedLanguage, setSelectedLanguage] = useState<Language>('en');
+  const [childrenCount, setChildrenCount] = useState(0);
+
+  // Modal visibility states
+  const [showCountryPicker, setShowCountryPicker] = useState(false);
+  const [showCurrencyPicker, setShowCurrencyPicker] = useState(false);
+  const [showLanguagePicker, setShowLanguagePicker] = useState(false);
+
+  // Options for pickers
+  const countryOptions = [
+    { value: 'US', label: 'United States' },
+    { value: 'FR', label: 'France' },
+    { value: 'IL', label: 'Israel' },
+    { value: 'GB', label: 'United Kingdom' },
+  ];
+
+  const currencyOptions = [
+    { value: 'USD', label: 'US Dollar ($)' },
+    { value: 'EUR', label: 'Euro (€)' },
+    { value: 'ILS', label: 'Israeli Shekel (₪)' },
+    { value: 'GBP', label: 'British Pound (£)' },
+  ];
+
+  const languageOptions = [
+    { value: 'en', label: 'English' },
+    { value: 'fr', label: 'Français' },
+    { value: 'he', label: 'עברית' },
+  ];
+
   const updateProfile = useFinanceStore((state) => state.updateProfile);
   const addHouseholdMember = useFinanceStore((state) => state.addHouseholdMember);
   const addPaymentMethod = useFinanceStore((state) => state.addPaymentMethod);
   const addBankAccount = useFinanceStore((state) => state.addBankAccount);
   const addExpectedTransaction = useFinanceStore((state) => state.addExpectedTransaction);
   
-  // Refs for scrolling
-  const scrollViewRef = useRef<ScrollView>(null);
-  
-  // Setup steps
-  const [currentStep, setCurrentStep] = useState(0);
-  const totalSteps = 5;
-  
-  // Step 1: Country, Language and Personal Info
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [selectedLanguage, setSelectedLanguage] = useState<Language>(language);
-  const [currency, setCurrency] = useState('USD');
-  const [country, setCountry] = useState('US');
-  
   // Step 1: Household Members
   const [adultCount, setAdultCount] = useState(1);
-  const [childrenCount, setChildrenCount] = useState(0);
   const [adults, setAdults] = useState<Array<{
     name: string, 
     salary: string, 
@@ -564,7 +587,6 @@ export default function AccountSetupScreen() {
   // Handle language change
   const handleLanguageChange = (lang: Language) => {
     setSelectedLanguage(lang);
-    setLanguage(lang);
   };
   
   // Update adult count
@@ -741,10 +763,8 @@ export default function AccountSetupScreen() {
   // Check if current step is valid
   const isStepValid = () => {
     switch (currentStep) {
-      case 0: // Country, Language and Personal Info + Household Members
-        return firstName.trim() && lastName.trim() && country && 
-               adults.every(adult => adult.name.trim()) &&
-               children.every(child => child.name.trim());
+      case 0: // Country, Language and Personal Info
+        return firstName.trim() && lastName.trim() && country && currency && selectedLanguage;
       case 1: // Budget and Loans
         return calculatedBudget && parseFloat(calculatedBudget) > 0 &&
                rentAmount.trim() && !isNaN(parseFloat(rentAmount));
@@ -1084,6 +1104,66 @@ export default function AccountSetupScreen() {
           <Text style={styles.stepTitle}>{t('personalInfo')}</Text>
           <Text style={styles.stepDescription}>{t('setupPersonalInfo')}</Text>
         </View>
+
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>{t('firstName')}</Text>
+          <TextInput
+            style={[styles.input, isRTL && styles.rtlInput]}
+            value={firstName}
+            onChangeText={setFirstName}
+            placeholder={t('enterYourName')}
+            placeholderTextColor={colors.textLight}
+            textAlign={isRTL ? 'right' : 'left'}
+          />
+        </View>
+
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>{t('lastName')}</Text>
+          <TextInput
+            style={[styles.input, isRTL && styles.rtlInput]}
+            value={lastName}
+            onChangeText={setLastName}
+            placeholder={t('enterYourName')}
+            placeholderTextColor={colors.textLight}
+            textAlign={isRTL ? 'right' : 'left'}
+          />
+        </View>
+
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>{t('country')}</Text>
+          <Pressable 
+            style={styles.button}
+            onPress={() => setShowCountryPicker(true)}
+          >
+            <Text style={styles.buttonText}>
+              {country ? countryOptions.find(c => c.value === country)?.label : t('country')}
+            </Text>
+          </Pressable>
+        </View>
+
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>{t('preferredCurrency')}</Text>
+          <Pressable 
+            style={styles.button}
+            onPress={() => setShowCurrencyPicker(true)}
+          >
+            <Text style={styles.buttonText}>
+              {currency ? currencyOptions.find(c => c.value === currency)?.label : t('preferredCurrency')}
+            </Text>
+          </Pressable>
+        </View>
+
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>{t('language')}</Text>
+          <Pressable 
+            style={styles.button}
+            onPress={() => setShowLanguagePicker(true)}
+          >
+            <Text style={styles.buttonText}>
+              {selectedLanguage ? languageOptions.find(l => l.value === selectedLanguage)?.label : t('language')}
+            </Text>
+          </Pressable>
+        </View>
         
         <View style={styles.inputGroup}>
           <Text style={styles.label}>{t('numberOfChildren')}</Text>
@@ -1104,6 +1184,120 @@ export default function AccountSetupScreen() {
             </Pressable>
           </View>
         </View>
+
+        {/* Country Picker Modal */}
+        <Modal
+          visible={showCountryPicker}
+          transparent={true}
+          animationType="slide"
+          onRequestClose={() => setShowCountryPicker(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalTitle}>{t('country')}</Text>
+                <Pressable onPress={() => setShowCountryPicker(false)}>
+                  <X size={24} color={colors.text} />
+                </Pressable>
+              </View>
+              <ScrollView style={styles.modalList}>
+                {countryOptions.map((option) => (
+                  <Pressable
+                    key={option.value}
+                    style={styles.modalItem}
+                    onPress={() => {
+                      setCountry(option.value);
+                      setShowCountryPicker(false);
+                    }}
+                  >
+                    <Text style={[
+                      styles.modalItemText,
+                      country === option.value && styles.modalItemTextSelected
+                    ]}>
+                      {option.label}
+                    </Text>
+                  </Pressable>
+                ))}
+              </ScrollView>
+            </View>
+          </View>
+        </Modal>
+
+        {/* Currency Picker Modal */}
+        <Modal
+          visible={showCurrencyPicker}
+          transparent={true}
+          animationType="slide"
+          onRequestClose={() => setShowCurrencyPicker(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalTitle}>{t('preferredCurrency')}</Text>
+                <Pressable onPress={() => setShowCurrencyPicker(false)}>
+                  <X size={24} color={colors.text} />
+                </Pressable>
+              </View>
+              <ScrollView style={styles.modalList}>
+                {currencyOptions.map((option) => (
+                  <Pressable
+                    key={option.value}
+                    style={styles.modalItem}
+                    onPress={() => {
+                      setCurrency(option.value);
+                      setShowCurrencyPicker(false);
+                    }}
+                  >
+                    <Text style={[
+                      styles.modalItemText,
+                      currency === option.value && styles.modalItemTextSelected
+                    ]}>
+                      {option.label}
+                    </Text>
+                  </Pressable>
+                ))}
+              </ScrollView>
+            </View>
+          </View>
+        </Modal>
+
+        {/* Language Picker Modal */}
+        <Modal
+          visible={showLanguagePicker}
+          transparent={true}
+          animationType="slide"
+          onRequestClose={() => setShowLanguagePicker(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalTitle}>{t('language')}</Text>
+                <Pressable onPress={() => setShowLanguagePicker(false)}>
+                  <X size={24} color={colors.text} />
+                </Pressable>
+              </View>
+              <ScrollView style={styles.modalList}>
+                {languageOptions.map((option) => (
+                  <Pressable
+                    key={option.value}
+                    style={styles.modalItem}
+                    onPress={() => {
+                      handleLanguageChange(option.value as Language);
+                      setShowLanguagePicker(false);
+                    }}
+                  >
+                    <Text style={[
+                      styles.modalItemText,
+                      selectedLanguage === option.value && styles.modalItemTextSelected
+                    ]}>
+                      {option.label}
+                    </Text>
+                  </Pressable>
+                ))}
+              </ScrollView>
+            </View>
+          </View>
+        </Modal>
       </View>
     );
   };

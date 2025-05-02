@@ -16,8 +16,9 @@ import {
 } from '@/types/finance';
 import { defaultCategories } from '@/mocks/categories';
 import { colors } from '@/constants/colors';
+import { Language } from '@/translations';
 
-interface FinanceState {
+export interface FinanceState {
   transactions: Transaction[];
   categories: Category[];
   profile: UserProfile;
@@ -99,6 +100,8 @@ export const useFinanceStore = create<FinanceState>()(
       transactions: [],
       categories: defaultCategories,
       profile: {
+        email: '',
+        isRegistered: false,
         firstName: '',
         lastName: '',
         currency: 'USD',
@@ -727,9 +730,12 @@ export const useFinanceStore = create<FinanceState>()(
           transactions: [],
           categories: defaultCategories,
           profile: {
+            email: '',
+            isRegistered: false,
             firstName: '',
             lastName: '',
             currency: 'USD',
+            country: 'US',
             monthlyBudget: 0,
             language: 'en',
             householdMembers: [],

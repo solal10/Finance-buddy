@@ -5,7 +5,7 @@ export const styles = StyleSheet.create({
   // Container styles
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.background,
     padding: 20,
   },
   content: {
@@ -20,12 +20,173 @@ export const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#333',
+    color: colors.text,
   },
   subtitle: {
     fontSize: 18,
-    color: '#6B7280',
+    color: colors.textLight,
     marginBottom: 16,
+  },
+
+  // Form styles
+  form: {
+    flex: 1,
+  },
+  formContent: {
+    paddingBottom: 20,
+  },
+  stepContent: {
+    flex: 1,
+  },
+  stepHeader: {
+    marginBottom: 24,
+  },
+  stepTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: colors.text,
+    marginBottom: 8,
+  },
+  stepDescription: {
+    fontSize: 16,
+    color: colors.textLight,
+  },
+  inputGroup: {
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: colors.text,
+    marginBottom: 8,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    backgroundColor: colors.background,
+  },
+  rtlInput: {
+    textAlign: 'right',
+  },
+
+  // Navigation styles
+  footer: {
+    paddingTop: 12,
+    paddingBottom: Platform.OS === 'ios' ? 0 : 12,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+  },
+  navigationButtons: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginTop: 12,
+  },
+  navigationButtonsRTL: {
+    flexDirection: 'row-reverse',
+  },
+  backButton: {
+    backgroundColor: colors.background,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 6,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 'auto',
+  },
+  backButtonText: {
+    color: colors.text,
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  button: {
+    backgroundColor: colors.primary,
+    borderRadius: 6,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    minWidth: 80,
+  },
+  buttonText: {
+    color: colors.white,
+    fontSize: 14,
+    fontWeight: '500',
+    marginRight: 8,
+  },
+  buttonDisabled: {
+    backgroundColor: colors.textLight,
+  },
+  buttonTextDisabled: {
+    color: colors.white,
+  },
+
+  // Progress styles
+  progressContainer: {
+    marginBottom: 12,
+  },
+  progressBar: {
+    height: 3,
+    backgroundColor: colors.border,
+    borderRadius: 1.5,
+    marginBottom: 6,
+  },
+  progressFill: {
+    height: '100%',
+    backgroundColor: colors.primary,
+    borderRadius: 2,
+  },
+  progressText: {
+    fontSize: 12,
+    color: colors.textLight,
+    textAlign: 'center',
+  },
+
+  // Modal styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    backgroundColor: colors.background,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+    maxHeight: '80%',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: colors.text,
+  },
+  modalList: {
+    flex: 1,
+  },
+  modalItem: {
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  modalItemText: {
+    fontSize: 16,
+    color: colors.text,
+  },
+  modalItemTextSelected: {
+    color: colors.primary,
+    fontWeight: 'bold',
   },
 
   // Card styles
@@ -50,15 +211,6 @@ export const styles = StyleSheet.create({
   },
 
   // Input styles
-  input: {
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 15,
-    fontSize: 16,
-    backgroundColor: '#F9FAFB',
-  },
   dateInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -86,18 +238,6 @@ export const styles = StyleSheet.create({
   },
 
   // Button styles
-  button: {
-    backgroundColor: '#3B82F6',
-    padding: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
   removeButton: {
     backgroundColor: '#EF4444',
     padding: 8,
@@ -331,53 +471,6 @@ export const styles = StyleSheet.create({
     gap: 16,
     marginTop: 24,
   },
-  buttonDisabled: {
-    backgroundColor: '#E5E7EB',
-  },
-  backButton: {
-    backgroundColor: '#F9FAFB',
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    borderRadius: 6,
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    alignItems: 'center',
-    minWidth: 80,
-  },
-  backButtonText: {
-    color: '#333',
-    fontSize: 12,
-    fontWeight: '600',
-  },
-
-  // Step styles
-  stepContent: {
-    flex: 1,
-  },
-  stepHeader: {
-    marginBottom: 16,
-  },
-  stepTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 4,
-  },
-  stepDescription: {
-    fontSize: 14,
-    color: '#6B7280',
-  },
-
-  // Input group styles
-  inputGroup: {
-    marginBottom: 16,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 8,
-  },
 
   // Language styles
   languageList: {
@@ -410,42 +503,6 @@ export const styles = StyleSheet.create({
     color: '#fff',
   },
 
-  // Form styles
-  form: {
-    flex: 1,
-  },
-  formContent: {
-    paddingBottom: 20,
-  },
-
-  // Footer styles
-  footer: {
-    marginTop: 'auto',
-    paddingBottom: Platform.OS === 'ios' ? 0 : 20,
-  },
-
-  // Progress styles
-  progressContainer: {
-    marginBottom: 16,
-  },
-  progressBar: {
-    height: 6,
-    backgroundColor: '#E5E7EB',
-    borderRadius: 3,
-    overflow: 'hidden',
-  },
-  progressFill: {
-    height: '100%',
-    backgroundColor: '#3B82F6',
-    borderRadius: 3,
-  },
-  progressText: {
-    fontSize: 12,
-    color: '#6B7280',
-    marginTop: 4,
-    textAlign: 'right',
-  },
-
   // Compact input styles
   compactInputGroup: {
     marginBottom: 8,
@@ -455,9 +512,6 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#333',
     marginBottom: 4,
-  },
-  rtlInput: {
-    textAlign: 'right',
   },
 
   // Currency styles
@@ -679,39 +733,6 @@ export const styles = StyleSheet.create({
   },
 
   // Modal styles
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  modalContent: {
-    width: '100%',
-    maxWidth: 400,
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-    paddingBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
-  },
   insuranceInputGroup: {
     marginBottom: 16,
   },
@@ -932,30 +953,6 @@ export const styles = StyleSheet.create({
     color: '#fff',
   },
 
-  // Navigation styles
-  navigationButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  navigationButtonsRTL: {
-    flexDirection: 'row-reverse',
-  },
-  nextButton: {
-    backgroundColor: colors.primary,
-    borderRadius: 6,
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    alignItems: 'center',
-    minWidth: 80,
-  },
-  nextButtonText: {
-    color: colors.white,
-    fontSize: 12,
-    fontWeight: '500',
-  },
-
   // Input text styles
   inputText: {
     color: '#333',
@@ -1088,4 +1085,20 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
     marginLeft: 8,
   },
-}); 
+
+  // Picker styles
+  pickerButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    borderRadius: 8,
+    padding: 12,
+    backgroundColor: '#F9FAFB',
+  },
+  pickerButtonText: {
+    fontSize: 16,
+    color: colors.text,
+  },
+});

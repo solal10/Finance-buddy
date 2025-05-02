@@ -22,6 +22,10 @@ export default function RootLayout() {
     ...FontAwesome.font,
   });
 
+  const segments = useSegments();
+  const router = useRouter();
+  const profile = useFinanceStore((state) => state.profile);
+
   useEffect(() => {
     if (error) {
       console.error("Font loading error:", error);
@@ -35,6 +39,30 @@ export default function RootLayout() {
       });
     }
   }, [loaded]);
+
+  useEffect(() => {
+    const inProtectedGroup = segments[0] === '(tabs)';
+    const inAuthGroup = segments[0] === 'login' || segments[0] === 'register';
+    const inAccountSetup = segments[0] === 'account-setup';
+
+    // If the user is not registered and tries to access protected routes, redirect to landing
+    if (!profile.isRegistered && inProtectedGroup) {
+      router.replace('/');
+      return;
+    }
+
+    // If the user is registered but hasn't completed their profile, redirect to account setup
+    if (profile.isRegistered && !profile.firstName && !inAccountSetup) {
+      router.replace('/account-setup');
+      return;
+    }
+
+    // If the user is registered and has completed their profile, redirect to dashboard
+    if (profile.isRegistered && profile.firstName && (inAuthGroup || inAccountSetup)) {
+      router.replace('/(tabs)');
+      return;
+    }
+  }, [segments, profile.isRegistered, profile.firstName]);
 
   if (!loaded) {
     return (
@@ -57,18 +85,6 @@ function RootLayoutNav() {
   const profile = useFinanceStore((state) => state.profile);
   const { isRTL } = useTranslation();
   
-  // Check if the user has completed account setup
-  useEffect(() => {
-    if (!profile) return; // Skip if profile is not loaded yet
-    
-    const inAuthGroup = segments[0] === '(tabs)';
-    
-    // If the user hasn't set their name (first time user), redirect to account setup
-    if (inAuthGroup && (!profile.firstName || profile.firstName === '')) {
-      router.replace('/account-setup');
-    }
-  }, [profile, segments, router]);
-  
   // Apply RTL layout if needed
   useEffect(() => {
     // This is just for demonstration - in a real app, we would need to restart the app
@@ -79,7 +95,11 @@ function RootLayoutNav() {
   }, [isRTL]);
   
   return (
-    <Stack>
+    <Stack
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="modal" options={{ presentation: "modal" }} />
       <Stack.Screen name="account-setup" options={{ headerShown: false }} />

@@ -1,5 +1,7 @@
 // User profile
 export interface UserProfile {
+  email: string;
+  isRegistered: boolean;
   firstName: string;
   lastName: string;
   currency: string;
