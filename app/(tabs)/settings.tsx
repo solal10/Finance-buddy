@@ -70,20 +70,20 @@ export default function SettingsScreen() {
 
     const paymentMethod = {
       type: newCard.type as 'creditCard' | 'debitCard' | 'bankAccount' | 'cash',
-      name: newCard.name.trim(),
+        name: newCard.name.trim(),
       cardType: newCard.type === 'creditCard' ? newCard.cardType as 'visa' | 'mastercard' : undefined,
-      limit: newCard.limit ? parseFloat(newCard.limit) : undefined,
+        limit: newCard.limit ? parseFloat(newCard.limit) : undefined,
       currentUsage: 0,
     };
-
+      
     addPaymentMethod(paymentMethod);
     setShowAddCard(false);
-    setNewCard({
-      type: 'creditCard',
-      name: '',
-      cardType: 'visa',
-      limit: ''
-    });
+      setNewCard({
+        type: 'creditCard',
+        name: '',
+        cardType: 'visa',
+        limit: ''
+      });
   };
   
   const resetAllData = async () => {
